@@ -1,0 +1,21 @@
+a jaki jest tu błąd? #include <iostream>
+#include <string>
+using namespace std;
+
+class Zwierze {
+	string gatunek;
+	Zwierze() : gatunek("Nieznany") {}
+	Zwierze(const string& g) : gatunek(g) {}
+
+	void dodajZwierze(string g)
+	{
+		gatunek = g;
+	}
+
+};
+
+int main()
+{
+	Zwierze* zwierzeta = nullptr;
+	zwierzeta = new Zwierze[3];
+}
