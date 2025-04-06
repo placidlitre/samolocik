@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 using namespace std;
 
 
@@ -10,36 +11,46 @@ class Samolot
 {
 
 	int x;
-	int y;
-	int poziomLotu;
+	int poziomY;
+	int zmianaLotu;
 	char litera;
 public:
 	Samolot() : litera('X') {}
-	Samolot(const char& literka, const int &poziomLotku) : litera(literka), poziomLotu(poziomLotku) {}
+	Samolot(const char& literka, const int &poziomekY) : litera(literka), poziomY(poziomekY) {}
 
 	void zmianaY()
 	{
-		if (poziomLotu < 0)
+		if (zmianaLotu < 0)
 		{
-			y++;
-			poziomLotu++;
+			poziomY++;
+			zmianaLotu++;
 		}
-		else if (poziomLotu > 0)
+		else if (zmianaLotu > 0)
 		{
-			y--;
-			poziomLotu--;
+			poziomY--;
+			zmianaLotu--;
 		}
 	}
 
-	void wpiszKierunek(int komendaKierunek)
+	void poziomDoGory(int zmianaLotku)
 	{
-		
+		poziomY++;
+	}
+
+	void poziomDoDolu(int zmianaLotku)
+	{
+		poziomY--;
+	}
+
+	void wpisanieZmianyLotu(int zmianaLotku)
+	{
+		zmianaLotu = zmianaLotku;
 	}
 
 	void pokazSamolot()
 	{
 		cout << litera << endl;
-		cout << poziomLotu << endl << endl;
+		cout << zmianaLotu << endl << endl;
 	}
 
 };
@@ -66,10 +77,23 @@ void Plansza()
 
 void tworzenieSamolotu(vector<Samolot>& samoloty, int &licznikSamolotow)
 {
-	int poziomLotu = rand() % 11;
-	samoloty.emplace_back((char(66 + licznikSamolotow)), poziomLotu); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+	int liniaY = rand() % 10;
+	samoloty.emplace_back((char(66 + licznikSamolotow)), liniaY); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
 	samoloty[licznikSamolotow].pokazSamolot();
 	licznikSamolotow++;
+}
+
+void kontrolaLotow(vector<Samolot>& samoloty)
+{
+	string komenda;
+	char szukanaLiteraSamolotu;
+
+	literaSamolotu = komenda[0];
+	auto it = find_if(samoloty.begin(), samoloty.end(), [szukanaLiteraSamolotu](Samolot& samolot)
+		{
+			return samolot.get
+		}
+	
 }
 
 int main()
@@ -78,8 +102,13 @@ int main()
 	vector <Samolot> samoloty;
 	int liczbaSamolotow = 0;
 
+
+	kontrolaLotow();
+
+
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
+
 
 	
 }
