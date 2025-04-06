@@ -1,21 +1,81 @@
-a jaki jest tu błąd? #include <iostream>
-#include <string>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-class Zwierze {
-	string gatunek;
-	Zwierze() : gatunek("Nieznany") {}
-	Zwierze(const string& g) : gatunek(g) {}
 
-	void dodajZwierze(string g)
+char MapaSamolotow[60][10];
+
+class Samolot
+{
+
+	int x;
+	int y;
+	int kierunek;
+	char litera;
+public:
+	Samolot() : litera('X') {}
+	Samolot(const char& literka) : litera(literka) {}
+
+	void zmianaY()
 	{
-		gatunek = g;
+		if (kierunek < 0)
+		{
+			y++;
+			kierunek++;
+		}
+		else if (kierunek > 0)
+		{
+			y--;
+			kierunek--;
+		}
+	}
+
+	void wpiszKierunek(int komendaKierunek)
+	{
+		kierunek = komendaKierunek;
+	}
+
+	void pokazSamolot()
+	{
+		cout << litera;
 	}
 
 };
 
+void wpiszKomende()
+{
+	
+}
+
+
+void Plansza()
+{
+	for (int i = 0; i < 62; i++)
+		cout << "=";
+	for (int i = 0; i < 10; i++)
+	{
+		cout << "|";
+		for (int j = 0; j < 62; j++)
+		{
+			
+		}
+	}
+}
+
+void tworzenieSamolotu(vector<Samolot>& samoloty, int &licznikSamolotow)
+{
+	samoloty.emplace_back(char(66 + licznikSamolotow)); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+	samoloty[licznikSamolotow].pokazSamolot();
+	licznikSamolotow++;
+}
+
 int main()
 {
-	Zwierze* zwierzeta = nullptr;
-	zwierzeta = new Zwierze[3];
+	vector <Samolot> samoloty;
+	int liczbaSamolotow = 0;
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+
+	
 }
