@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 
@@ -10,34 +11,35 @@ class Samolot
 
 	int x;
 	int y;
-	int kierunek;
+	int poziomLotu;
 	char litera;
 public:
 	Samolot() : litera('X') {}
-	Samolot(const char& literka) : litera(literka) {}
+	Samolot(const char& literka, const int &poziomLotku) : litera(literka), poziomLotu(poziomLotku) {}
 
 	void zmianaY()
 	{
-		if (kierunek < 0)
+		if (poziomLotu < 0)
 		{
 			y++;
-			kierunek++;
+			poziomLotu++;
 		}
-		else if (kierunek > 0)
+		else if (poziomLotu > 0)
 		{
 			y--;
-			kierunek--;
+			poziomLotu--;
 		}
 	}
 
 	void wpiszKierunek(int komendaKierunek)
 	{
-		kierunek = komendaKierunek;
+		
 	}
 
 	void pokazSamolot()
 	{
-		cout << litera;
+		cout << litera << endl;
+		cout << poziomLotu << endl << endl;
 	}
 
 };
@@ -64,16 +66,18 @@ void Plansza()
 
 void tworzenieSamolotu(vector<Samolot>& samoloty, int &licznikSamolotow)
 {
-	samoloty.emplace_back(char(66 + licznikSamolotow)); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+	int poziomLotu = rand() % 11;
+	samoloty.emplace_back((char(66 + licznikSamolotow)), poziomLotu); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
 	samoloty[licznikSamolotow].pokazSamolot();
 	licznikSamolotow++;
 }
 
 int main()
 {
+	srand(time(NULL));
 	vector <Samolot> samoloty;
 	int liczbaSamolotow = 0;
-	tworzenieSamolotu(samoloty, liczbaSamolotow);
+
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
 
