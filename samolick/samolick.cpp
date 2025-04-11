@@ -1,7 +1,9 @@
-﻿#include <iostream>
 #include <vector>
 #include <ctime>
 #include <string>
+#include <iostream>
+#include <cmath>
+
 using namespace std;
 
 
@@ -9,12 +11,13 @@ char MapaSamolotow[60][10];
 
 class Samolot
 {
-
+public:
 	int x;
 	int poziomY;
 	int zmianaLotu;
 	char litera;
-public:
+
+
 	Samolot() : litera('X'), poziomY(0), zmianaLotu(0), x(0) {}
 	Samolot(const char& literka, const int& poziomekY, const int& zmianaLotku, const int& xek) : litera(literka), poziomY(poziomekY), zmianaLotu(zmianaLotku), x(xek) {}
 
@@ -32,6 +35,13 @@ public:
 		}
 	}
 
+	void zmianaX()
+	{
+		x++;
+		if (x == 12)
+			x = 0;
+	}
+
 	void wpisanieZmianyLotu(int zmianaLotku)
 	{
 		zmianaLotu = zmianaLotku;
@@ -47,20 +57,6 @@ public:
 
 };
 
-
-void Plansza()
-{
-	for (int i = 0; i < 62; i++)
-		cout << "=";
-	for (int i = 0; i < 10; i++)
-	{
-		cout << "|";
-		for (int j = 0; j < 62; j++)
-		{
-
-		}
-	}
-}
 
 void tworzenieSamolotu(vector<Samolot>& samoloty, int& licznikSamolotow)
 {
@@ -132,11 +128,75 @@ void kontrolaLotow(vector<Samolot>& samoloty, int liczbaSamolotow)
 
 }
 
+
+
+void tworzenieSamolotuNaMapie(vector<Samolot>& samoloty, int liczbaSamolotow, int indeks)
+{
+	if (samoloty[indeks].zmianaLotu == 0)
+		cout << "=(" << samoloty[indeks].litera << "0)";
+	else
+	{
+		cout << "(" << samoloty[indeks].litera << abs(samoloty[indeks].zmianaLotu) << ")";
+		if (samoloty[indeks].zmianaLotu > 0)
+			cout << "/";
+		else
+			cout << "\\";
+	}
+}
+
+void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
+{
+	int Mapa[12][10];
+
+	int indeks;
+
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 12; j++)
+		{
+			Mapa[j][i] = 10;
+		}
+	}
+	
+	for (int i = 0; i < samoloty.size(); i++)
+	{
+		Mapa[samoloty[i].x][9-samoloty[i].poziomY] = i;
+	}
+	
+		for (int i = 0; i < 62; i++)
+			cout << "=";
+
+		cout << endl;
+		for (int i = 0; i < 10; i++)
+		{
+			cout << "|";
+			for (int j = 0; j < 12; j++)
+			{
+				if (Mapa[j][i] != 10)
+				{
+					indeks = Mapa[j][i];
+					tworzenieSamolotuNaMapie(samoloty, liczbaSamolotow, indeks);
+				}
+				else
+					cout << "     ";
+			}
+			cout << "|" << endl;
+		}
+	
+}
+
 void tura(vector<Samolot>& samoloty, int liczbaSamolotow)
 {
+	for (int i = 0; i < samoloty.size(); i++)
+	{
+		samoloty[i].zmianaX();
+		samoloty[i].zmianaY();
+	}
 	kontrolaLotow(samoloty, liczbaSamolotow);
-
+	tworzenieMapy(samoloty, liczbaSamolotow);
 }
+
  
 //w oddzielnym watku thread tworzymy samoloty
 
@@ -145,15 +205,18 @@ int main()
 	srand(time(NULL));
 	vector <Samolot> samoloty;
 	int liczbaSamolotow = 0;
-
-
-
-
-	tworzenieSamolotu(samoloty, liczbaSamolotow);
-	tworzenieSamolotu(samoloty, liczbaSamolotow);
-	tworzenieSamolotu(samoloty, liczbaSamolotow);
-	tworzenieSamolotu(samoloty, liczbaSamolotow);
-	kontrolaLotow(samoloty, liczbaSamolotow);
+	int licznik = 0;
+	
+	while (true)
+	{
+		if (licznik == 0)
+		{
+			licznik = (rand() % 2)+1;
+			tworzenieSamolotu(samoloty, liczbaSamolotow);
+		}
+		tura(samoloty, liczbaSamolotow);
+		licznik--;
+	}
 
 
 
