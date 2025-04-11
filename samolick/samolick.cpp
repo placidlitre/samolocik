@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <ctime>
-#include <algorithm>
+#include <string>
 using namespace std;
 
 
@@ -15,31 +15,21 @@ class Samolot
 	int zmianaLotu;
 	char litera;
 public:
-	Samolot() : litera('X') {}
-	Samolot(const char& literka, const int& poziomekY) : litera(literka), poziomY(poziomekY) {}
+	Samolot() : litera('X'), poziomY(0), zmianaLotu(0), x(0) {}
+	Samolot(const char& literka, const int& poziomekY, const int& zmianaLotku, const int& xek) : litera(literka), poziomY(poziomekY), zmianaLotu(zmianaLotku), x(xek) {}
 
 	void zmianaY()
 	{
 		if (zmianaLotu < 0)
 		{
-			poziomY++;
+			poziomY--;
 			zmianaLotu++;
 		}
 		else if (zmianaLotu > 0)
 		{
-			poziomY--;
+			poziomY++;
 			zmianaLotu--;
 		}
-	}
-
-	void poziomDoGory(int zmianaLotku)
-	{
-		poziomY++;
-	}
-
-	void poziomDoDolu(int zmianaLotku)
-	{
-		poziomY--;
 	}
 
 	void wpisanieZmianyLotu(int zmianaLotku)
@@ -50,15 +40,12 @@ public:
 	void pokazSamolot()
 	{
 		cout << litera << endl;
-		cout << zmianaLotu << endl << endl;
+		cout << poziomY << endl;
+		cout << zmianaLotu << endl;
+		cout << endl;
 	}
 
 };
-
-void wpiszKomende()
-{
-
-}
 
 
 void Plansza()
@@ -78,23 +65,80 @@ void Plansza()
 void tworzenieSamolotu(vector<Samolot>& samoloty, int& licznikSamolotow)
 {
 	int liniaY = rand() % 10;
-	samoloty.emplace_back((char(66 + licznikSamolotow)), liniaY); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+	samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, 0); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+
 	samoloty[licznikSamolotow].pokazSamolot();
-	licznikSamolotow++;
+
+	if (licznikSamolotow < 31)
+		licznikSamolotow++;
+	else
+		licznikSamolotow = 0;
 }
 
-void kontrolaLotow(vector<Samolot>& samoloty)
+void kontrolaLotow(vector<Samolot>& samoloty, int liczbaSamolotow)
 {
 	string komenda;
 	char szukanaLiteraSamolotu;
+	while (true)
+	{
+		cout << "Komenda: ";
+		getline(cin, komenda);
 
-	literaSamolotu = komenda[0];
-	auto it = find_if(samoloty.begin(), samoloty.end(), [szukanaLiteraSamolotu](Samolot& samolot)
+		szukanaLiteraSamolotu = char(komenda[0]);
+		int indeks = int(szukanaLiteraSamolotu) - 65;
+
+		if (komenda[0] == ' ')
+			return;
+
+		if (int(komenda[0]) - 65 >= liczbaSamolotow || int(komenda[0]) - 65<0)
 		{
-			return samolot.get
+			cout << "Bledna komenda" << endl;
+			continue;
 		}
 
+		if (komenda.size() != 3)
+		{
+			cout << "Bledna komenda" << endl;
+			continue;
+		}
+		
+		if (komenda[1] == '/')
+		{
+			samoloty[indeks].wpisanieZmianyLotu(int(komenda[2]) - 48);
+			samoloty[indeks].pokazSamolot();
+
+		}
+		else if (komenda[1] == '\\')
+		{
+			samoloty[indeks].wpisanieZmianyLotu(-(int(komenda[2]) - 48));
+			samoloty[indeks].pokazSamolot();
+		}
+		else if (komenda[1] == ' ')
+		{
+			if (komenda[2] == 'c')
+			{
+				samoloty[indeks].wpisanieZmianyLotu(0);
+				samoloty[indeks].pokazSamolot();
+			}
+
+			else
+				cout << "Bledna komenda";
+		}
+		else
+			cout << "Bledna komenda";
+
+		cout << endl;
+	}
+
 }
+
+void tura(vector<Samolot>& samoloty, int liczbaSamolotow)
+{
+	kontrolaLotow(samoloty, liczbaSamolotow);
+
+}
+ 
+//w oddzielnym watku thread tworzymy samoloty
 
 int main()
 {
@@ -103,11 +147,14 @@ int main()
 	int liczbaSamolotow = 0;
 
 
-	kontrolaLotow();
 
 
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	kontrolaLotow(samoloty, liczbaSamolotow);
+
 
 
 
