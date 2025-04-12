@@ -6,9 +6,6 @@
 
 using namespace std;
 
-
-char MapaSamolotow[60][10];
-
 class Samolot
 {
 public:
@@ -37,6 +34,7 @@ public:
 
 	void zmianaX()
 	{
+
 		x++;
 		if (x == 12)
 			x = 0;
@@ -51,7 +49,8 @@ public:
 	{
 		cout << litera << endl;
 		cout << poziomY << endl;
-		cout << zmianaLotu << endl;
+		cout << poziomY << endl;
+		cout << x << endl;
 		cout << endl;
 	}
 
@@ -61,7 +60,11 @@ public:
 void tworzenieSamolotu(vector<Samolot>& samoloty, int& licznikSamolotow)
 {
 	int liniaY = rand() % 10;
-	samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, 0); //tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+	int kierunek = rand() % 2;
+	if(kierunek==0)
+		samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, -1); // samoloty w prawo    tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+	else if(kierunek==1)
+		samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, -12); // samoloty w lewo
 
 	samoloty[licznikSamolotow].pokazSamolot();
 
@@ -86,13 +89,7 @@ void kontrolaLotow(vector<Samolot>& samoloty, int liczbaSamolotow)
 		if (komenda[0] == ' ')
 			return;
 
-		if (int(komenda[0]) - 65 >= liczbaSamolotow || int(komenda[0]) - 65<0)
-		{
-			cout << "Bledna komenda" << endl;
-			continue;
-		}
-
-		if (komenda.size() != 3)
+		if (int(komenda[0]) - 65 >= liczbaSamolotow || int(komenda[0]) - 65<0 || komenda.size() != 3)
 		{
 			cout << "Bledna komenda" << endl;
 			continue;
@@ -148,8 +145,8 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 {
 	int Mapa[12][10];
 
-	int indeks;
-
+	int indeks=0;
+	
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -161,7 +158,8 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 	
 	for (int i = 0; i < samoloty.size(); i++)
 	{
-		Mapa[samoloty[i].x][9-samoloty[i].poziomY] = i;
+		
+		Mapa[abs(samoloty[i].x)][9-samoloty[i].poziomY] = i;
 	}
 	
 		for (int i = 0; i < 62; i++)
