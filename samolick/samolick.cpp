@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -155,7 +156,7 @@ void tworzenieSamolotuNaMapie(vector<Samolot>& samoloty, int liczbaSamolotow, in
 
 void warunek(vector<Samolot>& samoloty, int liczbaSamolotow, int Mapa[][10])
 {
-	int kierunekPoziomy[2] = { -1, 1 };
+	int kierunekPoziomy[2] = { -2, 2 };
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -199,14 +200,15 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 		
 		Mapa[abs(samoloty[i].x)][9-samoloty[i].poziomY] = i;
 	}
-	
+		
+		cout << " ";
 		for (int i = 0; i < 62; i++)
 			cout << "=";
 
 		cout << endl;
 		for (int i = 0; i < 10; i++)
 		{
-			cout << "|";
+			cout << 9-i << "|";
 			for (int j = 0; j < 12; j++)
 			{
 				if (Mapa[j][i] != -1)
@@ -219,6 +221,10 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 			}
 			cout << "|" << endl;
 		}
+		cout << setw(3);
+		for (int i = 0; i < 12; i++)
+			cout << i << setw(5);
+		cout << endl;
 		warunek(samoloty, liczbaSamolotow, Mapa);
 
 }
@@ -231,6 +237,7 @@ void tura(vector<Samolot>& samoloty, int liczbaSamolotow)
 		samoloty[i].zmianaY();
 	}
 	kontrolaLotow(samoloty, liczbaSamolotow);
+	system("CLS");
 	tworzenieMapy(samoloty, liczbaSamolotow);
 }
 
