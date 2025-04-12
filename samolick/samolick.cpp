@@ -153,18 +153,44 @@ void tworzenieSamolotuNaMapie(vector<Samolot>& samoloty, int liczbaSamolotow, in
 	}
 }
 
-void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
+void warunek(vector<Samolot>& samoloty, int liczbaSamolotow, int Mapa[][10])
 {
-	int Mapa[12][10];
-
-	int indeks=0;
-	
+	int kierunekPoziomy[2] = { -1, 1 };
 
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 12; j++)
 		{
-			Mapa[j][i] = 10;
+			if (Mapa[j][i] != -1)
+			{
+				for (int k = 0; k < 2; k++)
+				{
+					if (j + kierunekPoziomy[k] < 0 || j + kierunekPoziomy[k]>11)
+						continue;
+
+					if (Mapa[j + kierunekPoziomy[k]][i] != -1)
+					{
+						cout << "GG";
+						exit(0);
+					}
+					
+				}
+			}
+		}
+	}
+}
+
+void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
+{
+	int Mapa[12][10];
+
+	int indeks=0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 12; j++)
+		{
+			Mapa[j][i] = -1;
 		}
 	}
 	
@@ -183,7 +209,7 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 			cout << "|";
 			for (int j = 0; j < 12; j++)
 			{
-				if (Mapa[j][i] != 10)
+				if (Mapa[j][i] != -1)
 				{
 					indeks = Mapa[j][i];
 					tworzenieSamolotuNaMapie(samoloty, liczbaSamolotow, indeks);
@@ -193,7 +219,8 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 			}
 			cout << "|" << endl;
 		}
-	
+		warunek(samoloty, liczbaSamolotow, Mapa);
+
 }
 
 void tura(vector<Samolot>& samoloty, int liczbaSamolotow)
@@ -206,6 +233,8 @@ void tura(vector<Samolot>& samoloty, int liczbaSamolotow)
 	kontrolaLotow(samoloty, liczbaSamolotow);
 	tworzenieMapy(samoloty, liczbaSamolotow);
 }
+
+
 
  
 //w oddzielnym watku thread tworzymy samoloty
