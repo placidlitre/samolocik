@@ -130,13 +130,25 @@ void kontrolaLotow(vector<Samolot>& samoloty, int liczbaSamolotow)
 void tworzenieSamolotuNaMapie(vector<Samolot>& samoloty, int liczbaSamolotow, int indeks)
 {
 	if (samoloty[indeks].zmianaLotu == 0)
-		cout << "=(" << samoloty[indeks].litera << "0)";
+	{
+		if (samoloty[indeks].x >= 0)
+			cout << "=";
+		cout << "(" << samoloty[indeks].litera << "0)";
+		if (samoloty[indeks].x < 0)
+			cout << "=";
+	}
 	else
 	{
-		cout << "(" << samoloty[indeks].litera << abs(samoloty[indeks].zmianaLotu) << ")";
-		if (samoloty[indeks].zmianaLotu > 0)
+		if (samoloty[indeks].x < 0 && samoloty[indeks].zmianaLotu > 0)
+			cout << "\\";
+		else if (samoloty[indeks].x < 0 && samoloty[indeks].zmianaLotu < 0)
 			cout << "/";
-		else
+
+		cout << "(" << samoloty[indeks].litera << abs(samoloty[indeks].zmianaLotu) << ")";
+
+		if (samoloty[indeks].x>0 && samoloty[indeks].zmianaLotu > 0)
+			cout << "/";
+		else if (samoloty[indeks].x > 0 && samoloty[indeks].zmianaLotu < 0)
 			cout << "\\";
 	}
 }
