@@ -167,9 +167,9 @@ void warunek(vector<Samolot>& samoloty)
 
 void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 {
-	/*for (Samolot samolot : samoloty) {
-		cout << samolot.litera << ", poziom Y: " << samolot.poziomY << endl;
-	}*/
+	for (Samolot samolot : samoloty) {
+		cout << samolot.litera << ", poziom Y: " << samolot.poziomY << " , poziom X: "<<samolot.x << endl;
+	}
 	vector <vector<Samolot>> tablicaSamolotowWLinii;
 	tablicaSamolotowWLinii.resize(WYS_PLANSZA); // deklaruje ze vector bedzie mial 10 wierszy, potrzebne
 	for (int y = 0; y < WYS_PLANSZA; y++) {
@@ -192,15 +192,14 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 			cout << "|" << endl;
 		}
 		else {
-			int ileWypisanoPol = 0;
 			int xPoprzedniegoSamolotu = 0;
-
+			int ileWypisanoPol =0;
 			for (int i = 0; i < tablicaSamolotowWLinii[y].size();i++) {
 				for (int x = 0; x < abs(tablicaSamolotowWLinii[y][i].x)- xPoprzedniegoSamolotu; x++)
 					cout << " ";
 				tworzenieSamolotuNaMapie(samoloty, liczbaSamolotow, tablicaSamolotowWLinii[y][i].litera - 'A');
-				ileWypisanoPol += abs(tablicaSamolotowWLinii[y][i].x) + 5; //dlugosc 1 samolotu
-				xPoprzedniegoSamolotu = abs(tablicaSamolotowWLinii[y][i].x);
+				ileWypisanoPol = abs(tablicaSamolotowWLinii[y][i].x) + 5 + 5*(tablicaSamolotowWLinii[y].size() - 1); //koordynat ostatniego + jego dlugosc to liczba wypisanych pol
+				xPoprzedniegoSamolotu = abs(tablicaSamolotowWLinii[y][i].x) ;
 
 			}
 			for (int i = 0; i < SZER_PLANSZA - ileWypisanoPol; i++) cout << " ";
