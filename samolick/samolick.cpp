@@ -16,10 +16,13 @@ public:
 	int poziomY;
 	int zmianaLotu;
 	char litera;
+	bool widocznosc;
+	bool kierunekPoziomy; // prawo to true, lewo to false 
 
 
-	Samolot() : litera('X'), poziomY(0), zmianaLotu(0), x(0) {}
-	Samolot(const char& literka, const int& poziomekY, const int& zmianaLotku, const int& xek) : litera(literka), poziomY(poziomekY), zmianaLotu(zmianaLotku), x(xek) {}
+
+	Samolot() : litera('X'), poziomY(0), zmianaLotu(0), x(0), widocznosc(true), kierunekPoziomy(true) {}
+	Samolot(const char& literka, const int& poziomekY, const int& zmianaLotku, const int& xek, const bool widocznosciek, const bool kieruneczekPoziomeczek) : litera(literka), poziomY(poziomekY), zmianaLotu(zmianaLotku), x(xek), widocznosc(widocznosciek), kierunekPoziomy(kieruneczekPoziomeczek) {}
 
 	void zmianaY()
 	{
@@ -38,9 +41,13 @@ public:
 	void zmianaX()
 	{
 
-		x++;
-		if (x == 12)
-			x = 0;
+		if (!(x > 56) && kierunekPoziomy) x++;
+		else if (x > -2 && !kierunekPoziomy) x--;
+		if (x == 57 || x == -2) {
+			widocznosc = false;
+		}
+
+
 	}
 
 	void wpisanieZmianyLotu(int zmianaLotku)
@@ -65,9 +72,9 @@ void tworzenieSamolotu(vector<Samolot>& samoloty, int& licznikSamolotow)
 	int liniaY = rand() % 10;
 	int kierunek = rand() % 2;
 	if (kierunek == 0)
-		samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, -1); // samoloty w prawo    tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
+		samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, -2, true, true); // samoloty w prawo    tworzy obiekt + odrazu działa konstruktor który wpisuje mu daną litere w liście inicjalizacyjnej
 	else if (kierunek == 1)
-		samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, -12); // samoloty w lewo
+		samoloty.emplace_back((char(65 + licznikSamolotow)), liniaY, 0, 57, true, false); // samoloty w lewo
 
 	samoloty[licznikSamolotow].pokazSamolot();
 
@@ -134,24 +141,24 @@ void tworzenieSamolotuNaMapie(vector<Samolot>& samoloty, int liczbaSamolotow, in
 {
 	if (samoloty[indeks].zmianaLotu == 0)
 	{
-		if (samoloty[indeks].x >= 0)
+		if (samoloty[indeks].kierunekPoziomy)
 			cout << "=";
 		cout << "(" << samoloty[indeks].litera << "0)";
-		if (samoloty[indeks].x < 0)
+		if (!samoloty[indeks].kierunekPoziomy)
 			cout << "=";
 	}
 	else
 	{
-		if (samoloty[indeks].x < 0 && samoloty[indeks].zmianaLotu > 0)
+		if (!samoloty[indeks].kierunekPoziomy && samoloty[indeks].zmianaLotu > 0)
 			cout << "\\";
-		else if (samoloty[indeks].x < 0 && samoloty[indeks].zmianaLotu < 0)
+		else if (!samoloty[indeks].kierunekPoziomy && samoloty[indeks].zmianaLotu < 0)
 			cout << "/";
 
 		cout << "(" << samoloty[indeks].litera << abs(samoloty[indeks].zmianaLotu) << ")";
 
-		if (samoloty[indeks].x > 0 && samoloty[indeks].zmianaLotu > 0)
+		if (samoloty[indeks].kierunekPoziomy && samoloty[indeks].zmianaLotu > 0)
 			cout << "/";
-		else if (samoloty[indeks].x > 0 && samoloty[indeks].zmianaLotu < 0)
+		else if (samoloty[indeks].kierunekPoziomy && samoloty[indeks].zmianaLotu < 0)
 			cout << "\\";
 	}
 }
@@ -168,11 +175,12 @@ void warunek(vector<Samolot>& samoloty)
 void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 {
 	for (Samolot samolot : samoloty) {
-		cout << samolot.litera << ", poziom Y: " << samolot.poziomY << " , poziom X: "<<samolot.x << endl;
+		cout << samolot.litera << ", poziom Y: " << samolot.poziomY << " , poziom X: " << samolot.x << endl;
 	}
 	vector <vector<Samolot>> tablicaSamolotowWLinii;
 	tablicaSamolotowWLinii.resize(WYS_PLANSZA); // deklaruje ze vector bedzie mial 10 wierszy, potrzebne
 	for (int y = 0; y < WYS_PLANSZA; y++) {
+
 		for (Samolot samolot : samoloty) {
 			if (samolot.poziomY == y) {
 				tablicaSamolotowWLinii[y].push_back(samolot); // wpisuje do vectora[y] samoloty ktore sa na tej linii 
@@ -184,8 +192,13 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 
 		/*for (Samolot samolot : tablicaSamolotowWLinii[y]) {
 			cout << samolot.x << " ";
-		} //wypisz vector 
+		} //wypisz vector
 		cout << endl;*/
+		if (!tablicaSamolotowWLinii[y].empty() && tablicaSamolotowWLinii[y][0].x == -1) {
+			cout << tablicaSamolotowWLinii[y][0].litera;
+			tablicaSamolotowWLinii[y].erase(tablicaSamolotowWLinii[y].begin());
+		}
+		else cout << " ";
 		cout << "|";
 		if (tablicaSamolotowWLinii[y].size() == 0) {
 			for (int x = 0; x < SZER_PLANSZA; x++) cout << " ";
@@ -193,23 +206,27 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 		}
 		else {
 			int xPoprzedniegoSamolotu = 0;
-			int ileWypisanoPol =0;
-			for (int i = 0; i < tablicaSamolotowWLinii[y].size();i++) {
-				for (int x = 0; x < abs(tablicaSamolotowWLinii[y][i].x)- xPoprzedniegoSamolotu; x++)
-					cout << " ";
-				tworzenieSamolotuNaMapie(samoloty, liczbaSamolotow, tablicaSamolotowWLinii[y][i].litera - 'A');
-				ileWypisanoPol = abs(tablicaSamolotowWLinii[y][i].x) + 5 + 5*(tablicaSamolotowWLinii[y].size() - 1); //koordynat ostatniego + jego dlugosc to liczba wypisanych pol
-				xPoprzedniegoSamolotu = abs(tablicaSamolotowWLinii[y][i].x) ;
+			int ileWypisanoPol = 0;
+			for (int i = 0; i < tablicaSamolotowWLinii[y].size(); i++) {
+				if (tablicaSamolotowWLinii[y][i].widocznosc && tablicaSamolotowWLinii[y][i].x < 56) {
+				
+					for (int x = 0; x < abs(tablicaSamolotowWLinii[y][i].x) - xPoprzedniegoSamolotu ; x++)
+						cout << " ";
+					tworzenieSamolotuNaMapie(samoloty, liczbaSamolotow, tablicaSamolotowWLinii[y][i].litera - 'A');
+					ileWypisanoPol = abs(tablicaSamolotowWLinii[y][i].x) + 5 * (tablicaSamolotowWLinii[y].size()); //koordynat ostatniego + długość samolotów razy ich ilość
+					xPoprzedniegoSamolotu = abs(tablicaSamolotowWLinii[y][i].x);
+				}
 
 			}
 			for (int i = 0; i < SZER_PLANSZA - ileWypisanoPol; i++) cout << " ";
-			cout << "|" << endl;
-			
+			cout << "|";
+			if (tablicaSamolotowWLinii[y].back().x == 56) cout << tablicaSamolotowWLinii[y].back().litera;
+			cout << endl;
 		}
 	}
 
 
-	
+
 
 
 
@@ -230,7 +247,7 @@ void tura(vector<Samolot>& samoloty, int liczbaSamolotow)
 
 
 
-//w oddzielnym watku thread tworzymy samoloty
+//w oddzielnym watku thread tworzymy sprawdzamy krakse 
 
 int main()
 {
@@ -238,19 +255,24 @@ int main()
 	vector <Samolot> samoloty;
 	int liczbaSamolotow = 0;
 	int licznik = 0;
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);//banda lewa to x=-2 i true ||| banda prawa to x =57 i false 
+	/*samoloty[0].x = -2;
+	samoloty[0].kierunekPoziomy = true;
+	samoloty[1].x = 56;
+	samoloty[1].kierunekPoziomy = false;*/
+	//samoloty[0].poziomY = 2;
+	//samoloty[1].poziomY = 2;
+
+	//dodać warunek, że samoloty nie mogą się zrespawnować w tym samym miejscu i czasie na bandzie (w sumie to będzie wynikać z warunku na krakse) 
+
 
 	while (true)
 	{
-		if (licznik == 0)
-		{
-			licznik = (rand() % 2) + 1;
-			tworzenieSamolotu(samoloty, liczbaSamolotow);
-		}
+
 		tura(samoloty, liczbaSamolotow);
-		licznik--;
+
 	}
-
-
 
 
 }
