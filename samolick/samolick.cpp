@@ -182,13 +182,13 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 	for (int y = 0; y < WYS_PLANSZA; y++) {
 
 		for (Samolot samolot : samoloty) {
-			if (samolot.poziomY == y) {
+			if (samolot.poziomY == y && samolot.x <57 && samolot.x>-2) {
 				tablicaSamolotowWLinii[y].push_back(samolot); // wpisuje do vectora[y] samoloty ktore sa na tej linii 
 			}
 		}
 		sort(tablicaSamolotowWLinii[y].begin(), tablicaSamolotowWLinii[y].end(), [](Samolot sam1, Samolot sam2) {
-			return abs(sam1.x) < abs(sam2.x);
-			}); // sortuje rosnaco na podstawie modulu koordynatow x 
+			return (sam1.x) < (sam2.x);
+			}); // sortuje rosnaco na podstawie  koordynatow x 
 
 		/*for (Samolot samolot : tablicaSamolotowWLinii[y]) {
 			cout << samolot.x << " ";
@@ -200,25 +200,44 @@ void tworzenieMapy(vector<Samolot>& samoloty, int liczbaSamolotow)
 		}
 		else cout << " ";
 		cout << "|";
+		if (!tablicaSamolotowWLinii[y].empty() && tablicaSamolotowWLinii[y].front().x == -2) {
+			tablicaSamolotowWLinii[y].erase(tablicaSamolotowWLinii[y].begin());
+		}
 		if (tablicaSamolotowWLinii[y].size() == 0) {
 			for (int x = 0; x < SZER_PLANSZA; x++) cout << " ";
 			cout << "|" << endl;
 		}
 		else {
-			int xPoprzedniegoSamolotu = 0;
+			int xPoprzedniegoSamolotu =0;
 			int ileWypisanoPol = 0;
+			int licznikSamolotowWPlanszy = 0;
 			for (int i = 0; i < tablicaSamolotowWLinii[y].size(); i++) {
 				if (tablicaSamolotowWLinii[y][i].widocznosc && tablicaSamolotowWLinii[y][i].x < 56) {
 				
 					for (int x = 0; x < abs(tablicaSamolotowWLinii[y][i].x) - xPoprzedniegoSamolotu ; x++)
 						cout << " ";
 					tworzenieSamolotuNaMapie(samoloty, liczbaSamolotow, tablicaSamolotowWLinii[y][i].litera - 'A');
-					ileWypisanoPol = abs(tablicaSamolotowWLinii[y][i].x) + 5 * (tablicaSamolotowWLinii[y].size()); //koordynat ostatniego + długość samolotów razy ich ilość
-					xPoprzedniegoSamolotu = abs(tablicaSamolotowWLinii[y][i].x);
+					ileWypisanoPol = abs(tablicaSamolotowWLinii[y][i].x) + 5 * (tablicaSamolotowWLinii[y].size()-licznikSamolotowWPlanszy); //koordynat ostatniego + długość samolotów razy ich ilość
+					if(tablicaSamolotowWLinii[y][i].x>-1)xPoprzedniegoSamolotu = (tablicaSamolotowWLinii[y][i].x) + 5;
+					licznikSamolotowWPlanszy++;
 				}
+				/*else if(tablicaSamolotowWLinii[y][i].widocznosc && tablicaSamolotowWLinii[y][i].x == 56 && tablicaSamolotowWLinii[y].size() >1) {
+					for (int j = 0; j < tablicaSamolotowWLinii[y][i].x - tablicaSamolotowWLinii[y][i - 1].x - tablicaSamolotowWLinii[y].size() +1; j++) cout << " ";
+				}*/
 
 			}
+			if (SZER_PLANSZA - ileWypisanoPol < 0) {
+				int ileNalezyWypisac = SZER_PLANSZA- tablicaSamolotowWLinii[y].back().x +5; 
+				for (int i = 0; i < ileNalezyWypisac ; i++) cout << " ";
+			}
+			else {
+
 			for (int i = 0; i < SZER_PLANSZA - ileWypisanoPol; i++) cout << " ";
+			}
+			if (tablicaSamolotowWLinii[y].back().x == 56 && tablicaSamolotowWLinii[y].size()>1) {
+				for (int j = 0; j < 5; j++)
+					cout << " ";
+			}
 			cout << "|";
 			if (tablicaSamolotowWLinii[y].back().x == 56) cout << tablicaSamolotowWLinii[y].back().litera;
 			cout << endl;
@@ -256,13 +275,23 @@ int main()
 	int liczbaSamolotow = 0;
 	int licznik = 0;
 	tworzenieSamolotu(samoloty, liczbaSamolotow);
-	tworzenieSamolotu(samoloty, liczbaSamolotow);//banda lewa to x=-2 i true ||| banda prawa to x =57 i false 
-	/*samoloty[0].x = -2;
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+	tworzenieSamolotu(samoloty, liczbaSamolotow);
+
+	//banda lewa to x=-2 i true ||| banda prawa to x =57 i false 
+	samoloty[0].x = -2;
 	samoloty[0].kierunekPoziomy = true;
-	samoloty[1].x = 56;
-	samoloty[1].kierunekPoziomy = false;*/
-	//samoloty[0].poziomY = 2;
-	//samoloty[1].poziomY = 2;
+	samoloty[1].x = 55;
+	samoloty[1].kierunekPoziomy = true;
+	samoloty[0].poziomY = 2;
+	samoloty[1].poziomY = 3;
+	samoloty[2].poziomY = 3; 
+	samoloty[2].kierunekPoziomy = true;
+	samoloty[2].x = 48;
+	samoloty[3].x = 35; 
+	samoloty[3].kierunekPoziomy = true;
+	samoloty[3].poziomY = 3;
 
 	//dodać warunek, że samoloty nie mogą się zrespawnować w tym samym miejscu i czasie na bandzie (w sumie to będzie wynikać z warunku na krakse) 
 
